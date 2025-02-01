@@ -1,7 +1,8 @@
 mod version;
+pub use version::Version;
 #[cfg(test)]
 mod tests {
-    use crate::version::Version;
+    use crate::*;
     #[test]
     fn version_test() {
         let v1 = Version::parse("1.2.3-alpha+001");
