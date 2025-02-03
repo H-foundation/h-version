@@ -2,14 +2,14 @@ use std::cmp::Ordering;
 use std::fmt::{Debug, Display};
 
 pub struct Version {
-    epoch: Option<u64>, // For Debian-style epochs (e.g., "1:2.3.4")
-    components: Vec<String>, // Main version components (e.g., ["1", "2", "3"])
-    pre_release: Option<String>, // Pre-release tag (e.g., "alpha", "beta", "Snapshot")
+    epoch: Option<u64>, // epochs (e.g., "1:2.3.4")
+    components: Vec<String>, // Main version components (e.g., 1.2.3)
+    pre_release: Option<String>, // Pre-release tag (e.g., "alpha", "beta", "Snapshot", "rc")
     build_metadata: Option<String>, // Build metadata (e.g., "+001")
 }
 impl Version {
     pub fn parse(version_str: &str) -> Self {
-        // Handle Debian-style epochs (e.g., "1:2.3.4")
+        // Handle epochs
         let mut parts = version_str.splitn(2, ':');
         let epoch = parts.next().and_then(|s| s.parse::<u64>().ok());
         let rest = parts.next().unwrap_or(version_str);
@@ -45,6 +45,12 @@ impl PartialEq for Version {
             && self.pre_release == other.pre_release
             && self.build_metadata == other.build_metadata
     }
+    fn ne(&self, other: &Self) -> bool {
+        self.epoch != other.epoch
+            || self.components != other.components
+            || self.pre_release != other.pre_release
+            || self.build_metadata != other.build_metadata
+    }
 }
 impl Eq for Version {}
 
@@ -55,7 +61,7 @@ impl PartialOrd for Version {
 }
 impl Ord for Version {
     fn cmp(&self, other: &Self) -> Ordering {
-        // Compare epochs (Debian-style)
+        // Compare epochs
         if let Some(epoch_cmp) = self.epoch.partial_cmp(&other.epoch) {
             if epoch_cmp != Ordering::Equal {
                 return epoch_cmp;
@@ -78,7 +84,7 @@ impl Ord for Version {
                 // If one is numeric and the other is not, the numeric one is smaller
                 (Some(_), None) => return Ordering::Less,
                 (None, Some(_)) => return Ordering::Greater,
-                // Lexicographic comparison for non-numeric components
+                // comparison for non-numeric components
                 (None, None) => {
                     let cmp = a.cmp(b);
                     if cmp != Ordering::Equal {
@@ -93,7 +99,7 @@ impl Ord for Version {
             (None, None) => Ordering::Equal,
             (None, Some(_)) => Ordering::Greater, // No pre-release is greater
             (Some(_), None) => Ordering::Less, // Pre-release is less
-            (Some(a), Some(b)) => a.cmp(b), // Compare pre-releases lexicographically
+            (Some(a), Some(b)) => a.to_lowercase().cmp(&b.to_lowercase()), // Compare pre-releases (because alpha, beta and rc are in order there is no need to compare them one by one. just compare the strings of them.)
         }
     }
 }
@@ -134,5 +140,10 @@ impl Display for Version {
             string += build_metadata.as_str();
         }
         write!(f, "{}",string)
+    }
+}
+impl Default for Version {
+    fn default() -> Self {
+        Version::parse("0.0.1")
     }
 }
