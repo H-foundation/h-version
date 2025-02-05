@@ -1,6 +1,13 @@
 [package]
 name = "h-version"
-version = "0.1.0"
+version = "0.5.0"
 edition = "2021"
+description = "Version comparing library"
+license = "GPL-3"
+license-file = "LICENSE"
+authors = ["Hosein Lavaei"]
+repository = "https://github.com/H-foundation/h-version"
+homepage = "https://github.com/H-foundation/h-version"
+documentation = "https://docs.rs/h-version"
 
 [dependencies]

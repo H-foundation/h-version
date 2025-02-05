@@ -1,13 +1,31 @@
 use std::cmp::Ordering;
 use std::fmt::{Debug, Display};
 
+///
+///
+/// # Example
+/// parts of version can be ignored
+/// ```
+/// use std::cmp::Ordering::Greater;
+/// use h_version::Version;
+/// let version1 = Version::parse("1:123.543.57-alpha+001");
+/// let version2 = Version::parse("1:123.543.56-beta+002");
+/// assert_eq!(version1.cmp(&version2),Greater);
+/// ```
 pub struct Version {
-    epoch: Option<u64>, // epochs (e.g., "1:2.3.4")
-    components: Vec<String>, // Main version components (e.g., 1.2.3)
-    pre_release: Option<String>, // Pre-release tag (e.g., "alpha", "beta", "Snapshot", "rc")
-    build_metadata: Option<String>, // Build metadata (e.g., "+001")
+    pub epoch: Option<u64>, // epochs (e.g., "1:2.3.4")
+    pub components: Vec<String>, // Main version components (e.g., 1.2.3)
+    pub pre_release: Option<String>, // Pre-release tag (e.g., "alpha", "beta", "Snapshot", "rc")
+    pub build_metadata: Option<String>, // Build metadata (e.g., "+001")
 }
 impl Version {
+    /// makes a version from a str.
+    /// # Example
+    /// ```
+    /// use h_version::Version;
+    /// let version = Version::parse("1:23423.553.845-rc+255");
+    /// let version = version.to_string();
+    /// assert_eq!(version,"1:23423.553.845-rc+255".to_string());
     pub fn parse(version_str: &str) -> Self {
         // Handle epochs
         let mut parts = version_str.splitn(2, ':');

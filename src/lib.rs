@@ -1,3 +1,7 @@
+//! # H-Version
+//!
+//! 'H-Version' is a version comparing library that meant to be used for H foundation projects
+
 mod version;
 pub use version::Version;
 #[cfg(test)]
