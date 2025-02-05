@@ -1,9 +1,9 @@
 [package]
 name = "h-version"
-version = "0.5.0"
+version = "0.5.1"
 edition = "2021"
 description = "Version comparing library"
-license = "MIT"
+license = "GPL-3"
 authors = ["Hosein Lavaei"]
 repository = "https://github.com/H-foundation/h-version"
 homepage = "https://github.com/H-foundation/h-version"
