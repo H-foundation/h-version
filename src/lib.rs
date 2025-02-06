@@ -6,6 +6,7 @@ mod version;
 pub use version::Version;
 #[cfg(test)]
 mod tests {
+    use std::cmp::Ordering::Equal;
     use crate::*;
     #[test]
     fn version_test() {
@@ -54,5 +55,11 @@ mod tests {
         assert_eq!(v5_display, "1.0.0-SNAPSHOT");
         let v5_debug = format!("{:?}", v5);
         assert_eq!(v5_debug, "epoch:0 components:[\"1\", \"0\", \"0\"] pre_release:SNAPSHOT build_metadata:0");
+    }
+    #[test]
+    fn test_of_additional_zero(){
+        let v1 = Version::parse("1.2.3");
+        let v2 = Version::parse("1.2.3.0");
+        assert_eq!(v1.cmp(&v2), Equal);
     }
 }
