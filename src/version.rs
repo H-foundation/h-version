@@ -44,7 +44,7 @@ impl Version {
 
         // Split main version into components
         let components: Vec<String> = main_version
-            .split(['.','-']) // Split on `.` or `-`
+            .split(['.']) // Split on `.`
             .map(|s| s.to_string())
             .collect();
 
@@ -111,14 +111,17 @@ impl Ord for Version {
                 }
             }
         }
-
         // If main components are equal, compare pre-releases
-        match (&self.pre_release, &other.pre_release) {
-            (None, None) => Ordering::Equal,
-            (None, Some(_)) => Ordering::Greater, // No pre-release is greater
-            (Some(_), None) => Ordering::Less, // Pre-release is less
-            (Some(a), Some(b)) => a.to_lowercase().cmp(&b.to_lowercase()), // Compare pre-releases (because alpha, beta and rc are in order there is no need to compare them one by one. just compare the strings of them.)
+        if self.pre_release.is_some() || other.pre_release.is_some() {
+            return match (&self.pre_release, &other.pre_release) {
+                (None, None) => Ordering::Equal,
+                (None, Some(_)) => Ordering::Greater, // No pre-release is greater
+                (Some(_), None) => Ordering::Less, // Pre-release is less
+                (Some(a), Some(b)) => a.to_lowercase().cmp(&b.to_lowercase()), // Compare pre-releases (because alpha, beta and rc are in order there is no need to compare them one by one. just compare the strings of them.)
+            }
         }
+        // compare build metadata
+        self.build_metadata.partial_cmp(&other.build_metadata).unwrap()
     }
 }
 impl Debug for Version {
