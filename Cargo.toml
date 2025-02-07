@@ -9,5 +9,3 @@ repository = "https://github.com/H-foundation/h-version"
 homepage = "https://github.com/H-foundation/h-version"
 documentation = "https://docs.rs/h-version"
 keywords = ["version","h-foundation"]
-
-[dependencies]
